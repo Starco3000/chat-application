@@ -11,6 +11,7 @@ const CheckEmailPage = () => {
 
   const navigate = useNavigate();
 
+  //  //Cập nhật trạng thái data khi người dùng nhập vào trường email.
   const handleOnChange = (e) => {
     const { name, value } = e.target;
 
@@ -22,10 +23,12 @@ const CheckEmailPage = () => {
     });
   };
 
+  //Hàm gọi API để xác thực mật khẩu người dùng khi biểu mẫu được gửi.
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); //Ngăn chặn hành vi mặc định của form
     e.stopPropagation();
 
+    //Lấy URL từ biến môi trường
     const URL = `${process.env.REACT_APP_BACKEND_URL}/api/email`;
 
     try {
@@ -33,6 +36,7 @@ const CheckEmailPage = () => {
 
       toast.success(response.data.message);
 
+      //Nếu server trả về dữ liệu thành công, điều hướng người dùng đến trang /password
       if (response.data.success) {
         setData({
           email: '',

@@ -16,6 +16,7 @@ const CheckPasswordPage = () => {
   const location = useLocation();
   const dispatch = useDispatch();
 
+  // Ktra nếu không có name trong location.state, điều hướng người dùng đến trang /email
   useEffect(() => {
     if (!location?.state?.name) {
       navigate('/email');
@@ -23,6 +24,7 @@ const CheckPasswordPage = () => {
     }
   }, []);
 
+  //Cập nhật trạng thái data khi người dùng nhập vào trường mật khẩu.
   const handleOnChange = (e) => {
     const { name, value } = e.target;
 
@@ -34,13 +36,16 @@ const CheckPasswordPage = () => {
     });
   };
 
+  //Hàm gọi API để xác thực mật khẩu người dùng khi biểu mẫu được gửi.
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); //Ngăn chặn hành vi mặc định của form
     e.stopPropagation();
 
+    //Lấy URL từ biến môi trường
     const URL = `${process.env.REACT_APP_BACKEND_URL}/api/password`;
 
     try {
+      //Thực hiện yêu cầu HTTP POST với password và userId.
       const response = await axios({
         method: 'POST',
         url: URL,
@@ -53,6 +58,7 @@ const CheckPasswordPage = () => {
 
       toast.success(response.data.message);
 
+      //Nếu response trả về data thành công thì lưu token vào Redux store và localStorage.
       if (response.data.success) {
         dispatch(setToken(response?.data?.token));
         localStorage.setItem('token', response?.data?.token);
@@ -70,6 +76,7 @@ const CheckPasswordPage = () => {
     <div className='mt-5'>
       <div className='bg-white w-full max-w-md rounded overflow-hidden p-4 mx-auto'>
         <div className='w-fit mx-auto mb-2 flex justify-center items-center flex-col'>
+          {/* Hiển thị Avatar người đùng đã được xử lý ngăn chặn re-render */}
           <MemorizedAvatar
             width={70}
             height={70}

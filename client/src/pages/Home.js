@@ -13,14 +13,18 @@ const Home = () => {
 
   const fetchUserDetails = async() => {
     try {
+      //Lấy URL từ biến môi trường
       const URL = `${process.env.REACT_APP_BACKEND_URL}/api/user-details`;
+      // Thực hiện yêu cầu HTTP GET đến URL.
       const response = await axios({
         url: URL,
-        withCredentials: true,
+        withCredentials: true, // Gửi cookie cùng với yêu cầu
       });
 
-      dispatch(setUser(response.data.data));
+      // Cập nhập state user với data từ response
+      dispatch(setUser(response.data.data)); 
 
+      // Nếu server trả về dữ liệu yêu cầu logout, thực hiện logout và điều hướng đến trang email
       if (response.data.data.logout) {
         dispatch(logout());
         navigate('/email');
@@ -40,6 +44,7 @@ const Home = () => {
       Home
       {/* Message Component */}
       <section>
+        {/* render các component con */}
         <Outlet />
       </section>
     </div>
