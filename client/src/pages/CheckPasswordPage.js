@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import Avatar from '../components/Avatar';
+import { setToken } from '../redux/userSlice';
 
 const CheckPasswordPage = () => {
   const [data, setData] = useState({
@@ -12,14 +14,14 @@ const CheckPasswordPage = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  console.log('location', location.state.name);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!location?.state?.name) {
       navigate('/email');
+      console.log('location', location.state.name);
     }
-  }, [location, navigate]);
+  }, []);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -52,6 +54,9 @@ const CheckPasswordPage = () => {
       toast.success(response.data.message);
 
       if (response.data.success) {
+        dispatch(setToken(response?.data?.token));
+        localStorage.setItem('token', response?.data?.token);
+
         setData({
           password: '',
         });
@@ -65,7 +70,7 @@ const CheckPasswordPage = () => {
     <div className='mt-5'>
       <div className='bg-white w-full max-w-md rounded overflow-hidden p-4 mx-auto'>
         <div className='w-fit mx-auto mb-2 flex justify-center items-center flex-col'>
-          <Avatar
+          <MemorizedAvatar
             width={70}
             height={70}
             name={location?.state?.name}
@@ -108,5 +113,7 @@ const CheckPasswordPage = () => {
     </div>
   );
 };
+
+const MemorizedAvatar = React.memo(Avatar); // help memoize the Avatar component not to re-render on every state change
 
 export default CheckPasswordPage;
