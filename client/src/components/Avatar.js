@@ -27,7 +27,7 @@ const Avatar = ({ userId, name, imageUrl, width, height }) => {
   ];
 
   const randomNumber = Math.floor(Math.random() * 9);
-  console.log('randomNumber', randomNumber);
+  // console.log('randomNumber', randomNumber);
 
   return (
     <div
