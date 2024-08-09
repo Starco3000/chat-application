@@ -1,26 +1,35 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { IoChatbubbleEllipses } from 'react-icons/io5';
 import { FaUserPlus } from 'react-icons/fa';
 import { BiLogOut } from 'react-icons/bi';
 import Avatar from './Avatar';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import EditUserDetails from './EditUserDetails';
-// import Divider from './Divider';
 import { FiArrowUpLeft } from 'react-icons/fi';
 import SearchUser from './SearchUser';
+import { logout } from '../redux/userSlice';
 
 const Sidebar = () => {
   const user = useSelector((state) => state?.user);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [allUser, setAllUser] = useState([]);
   const [openSearchUser, setOpenSearchUser] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  //Logout handle
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/email');
+    localStorage.clear();
+  };
   return (
     <div className='w-full h-full grid grid-cols-[48px,1fr] bg-white'>
       <div className='bg-slate-100 w-12 h-full rounded-tr-lg rounded-br-lg py-5 text-slate-600 flex flex-col justify-between'>
         {/* Top section */}
         <div>
+          {/* Chat  */}
           <NavLink
             className={({ isActive }) =>
               `w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded ${
@@ -32,6 +41,7 @@ const Sidebar = () => {
             <IoChatbubbleEllipses size={20} />
           </NavLink>
 
+          {/* Search & Add friend  */}
           <div
             className='w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded'
             title='add friend'
@@ -58,6 +68,7 @@ const Sidebar = () => {
           </button>
           <button
             className='w-12 h-12  flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded'
+            onClick={handleLogout}
             title='logout'
           >
             <div className='-ml-2'>
@@ -94,7 +105,9 @@ const Sidebar = () => {
       )}
 
       {/* Search user */}
-      {openSearchUser && <SearchUser onClose={() => setOpenSearchUser(false)} />}
+      {openSearchUser && (
+        <SearchUser onClose={() => setOpenSearchUser(false)} />
+      )}
     </div>
   );
 };

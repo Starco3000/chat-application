@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout, setUser } from '../redux/userSlice';
+import { logout, setUser, setOnlineUser } from '../redux/userSlice';
 import axios from 'axios';
 import Sidebar from '../components/Sidebar';
 import logo from '../assets/logo.png';
+import io from 'socket.io-client';
 
 const Home = () => {
   const user = useSelector((state) => state.user);
@@ -12,7 +13,7 @@ const Home = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log('Redux user', user);
+  console.log('user', user);
 
   const fetchUserDetails = async () => {
     try {
@@ -42,7 +43,27 @@ const Home = () => {
     fetchUserDetails();
   }, []);
 
-  console.log('location', location);
+  /***socket connection */
+  useEffect(() => {
+    const socketConnection = io(process.env.REACT_APP_BACKEND_URL, {
+      auth: {
+        token: localStorage.getItem('token'),
+      },
+    });
+
+    socketConnection.on('onlineUser', (data) => {
+      console.log(data);
+      dispatch(setOnlineUser(data));
+    });
+
+    // dispatch(setSocketConnection(socketConnection))
+
+    return () => {
+      socketConnection.disconnect();
+    };
+  }, []);
+
+  // console.log('location', location);
   const basePath = location.pathname === '/';
 
   return (
@@ -58,7 +79,7 @@ const Home = () => {
       </section>
 
       <div
-        className={`justify-center items-center flex-col gap-2 ${
+        className={`justify-center items-center flex-col gap-2 hidden ${
           !basePath ? 'hidden' : 'lg:flex'
         }`}
       >

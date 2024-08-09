@@ -10,7 +10,7 @@ import { setUser } from '../redux/userSlice';
 const EditUserDetails = ({ onClose, user }) => {
   const [data, setData] = useState({
     _id: user?._id,
-    name: user?.user,
+    name: '',
     profile_pic: user?.profile_pic,
   });
   const uploadPhotoRef = useRef();
@@ -25,15 +25,16 @@ const EditUserDetails = ({ onClose, user }) => {
     });
   }, [user]);
 
-  //
   const handleOnChange = (e) => {
-    const { name, value } = e.target;
-    setData((preve) => {
-      return {
-        ...preve,
-        [name]: value,
-      };
-    });
+    // const { name, value } = e.target;
+
+    // setData((preve) => {
+    //   return {
+    //     ...preve,
+    //     [name]: value,
+    //   };
+    // });
+    setData({ ...data, [e.target.name]: e.target.value });
   };
 
   const handleOpenUploadPhoto = (e) => {
@@ -61,7 +62,7 @@ const EditUserDetails = ({ onClose, user }) => {
     try {
       const URL = `${process.env.REACT_APP_BACKEND_URL}/api/update-user`;
       const response = await axios({
-        method: 'POST',
+        method: 'post',
         url: URL,
         data: data,
         withCredentials: true,
@@ -92,7 +93,7 @@ const EditUserDetails = ({ onClose, user }) => {
               name='name'
               id='name'
               value={data.name}
-              onClick={handleOnChange}
+              onChange={handleOnChange}
               className='w-full py-1 px-2 focus:outline-primary border-0.5 '
             />
           </div>

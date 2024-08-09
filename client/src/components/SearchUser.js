@@ -18,6 +18,7 @@ const SearchUser = ({ onClose }) => {
       setLoading(false);
 
       setSearchUSer(response.data.data);
+      
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }

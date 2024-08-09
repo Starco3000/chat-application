@@ -12,7 +12,6 @@ const uploadFile = async (file) => {
     method: 'post',
     body: formData,
   });
-
   const responseData = await response.json();
 
   return responseData;
