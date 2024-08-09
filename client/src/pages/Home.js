@@ -1,7 +1,12 @@
 import React, { useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout, setUser, setOnlineUser } from '../redux/userSlice';
+import {
+  logout,
+  setUser,
+  setOnlineUser,
+  setSocketConnection,
+} from '../redux/userSlice';
 import axios from 'axios';
 import Sidebar from '../components/Sidebar';
 import logo from '../assets/logo.png';
@@ -56,7 +61,7 @@ const Home = () => {
       dispatch(setOnlineUser(data));
     });
 
-    // dispatch(setSocketConnection(socketConnection))
+    dispatch(setSocketConnection(socketConnection));
 
     return () => {
       socketConnection.disconnect();
@@ -86,9 +91,9 @@ const Home = () => {
         <div>
           <img src={logo} width={250} alt='logo' />
         </div>
-        <p className='text-lg mt-2 text-slate-500'>
+        <div className='text-lg mt-2 text-slate-500'>
           Select user to send message
-        </p>
+        </div>
       </div>
     </div>
   );
