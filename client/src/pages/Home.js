@@ -18,7 +18,7 @@ const Home = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log('user', user);
+  // console.log('user', user);
 
   const fetchUserDetails = async () => {
     try {
