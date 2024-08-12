@@ -189,26 +189,26 @@ const MessagePage = () => {
       {/* show all message */}
       <section className='h-[calc(100vh-128px)] overflow-x-hidden overflow-y-scroll scrollbar relative bg-slate-200 bg-opacity-50'>
         {/* All message show here */}
-        <div className='flex flex-col gap-2 py-2 mx-3' ref={currentMessage}>
+        <div className='flex flex-col gap-2 py-2 mx-2' ref={currentMessage}>
           {allMessage.map((msg, index) => {
             return (
               <div
-                className={`bg-white p-1 py-1  rounded w-fit max-w-[280px] md:max-w-md ${
-                  user?._id === msg.msgByUserId ? 'ml-auto bg-teal-100' : ''
+                className={` p-1 py-1  rounded w-fit max-w-[280px] md:max-w-sm lg:max-w-md ${
+                  user?._id === msg.msgByUserId
+                    ? 'ml-auto bg-teal-100'
+                    : 'bg-white'
                 }`}
               >
-                {/* send message as a picture */}
-                <div className='w-full'>
+                <div className='w-full relative'>
+                  {/* send message as a picture */}
                   {msg?.imageUrl && (
                     <img
                       src={msg?.imageUrl}
                       className='w-full h-full max-h-80 object-scale-down'
                     />
                   )}
-                </div>
-                
-                {/* Send message as a video */}
-                <div className='w-full'>
+
+                  {/* Send message as a video */}
                   {msg?.videoUrl && (
                     <video
                       src={msg?.videoUrl}
@@ -233,7 +233,7 @@ const MessagePage = () => {
 
         {/* Upload image display */}
         {message.imageUrl && (
-          <div className='w-full h-full sticky bottom-0 bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden'>
+          <div className='w-full h-[91%] fixed top-0 bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden'>
             <div
               className='w-fit p-2 absolute top-0 right-0 cursor-pointer hover:text-red-600'
               onClick={handleClearUploadImage}
@@ -251,7 +251,7 @@ const MessagePage = () => {
         )}
         {/* Upload video display */}
         {message.videoUrl && (
-          <div className='w-full h-full sticky bottom-0 bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden'>
+          <div className='w-full h-[91%] fixed top-0 bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden'>
             <div
               className='w-fit p-2 absolute top-0 right-0 cursor-pointer hover:text-red-600'
               onClick={handleClearUploadVideo}
