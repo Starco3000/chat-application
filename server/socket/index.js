@@ -2,6 +2,7 @@ const express = require('express');
 const { Server } = require('socket.io');
 const http = require('http');
 const getUserDetailsFromToken = require('../helpers/getUserDetailsFromToken');
+const getConversation = require('../helpers/getConversation');
 const UserModel = require('../models/UserModel');
 const {
   ConversationModel,
@@ -66,9 +67,6 @@ io.on('connection', async (socket) => {
     socket.emit('message', getConversationMessage?.messages || []);
   });
 
-  //previous message
-  
-
   // new message
   socket.on('new message', async (data) => {
     //Check conversation is available both user
@@ -113,7 +111,45 @@ io.on('connection', async (socket) => {
       .sort({ updatedAt: -1 });
 
     io.to(data?.sender).emit('message', getConversationMessage?.messages || []);
-    io.to(data?.receiver).emit('message', getConversationMessage?.messages || []);
+    io.to(data?.receiver).emit(
+      'message',
+      getConversationMessage?.messages || [],
+    );
+
+    //send conversation
+    const conversationSender = await getConversation(data?.sender);
+    const conversationReceiver = await getConversation(data?.receiver);
+    io.to(data?.sender).emit('conversation', conversationSender);
+    io.to(data?.receiver).emit('conversation', conversationReceiver);
+  });
+
+  //sidebar
+  socket.on('sidebar', async (currentUserId) => {
+    console.log('current user', currentUserId);
+    const conversation = await getConversation(currentUserId);
+    socket.emit('conversation', conversation);
+  });
+
+  //seen logic
+  socket.on('seen', async (msgByUserId) => {
+    let conversation = await ConversationModel.findOne({
+      $or: [
+        { sender: user?._id, receiver: msgByUserId },
+        { sender: msgByUserId, receiver: user?._id },
+      ],
+    });
+
+    const conversationMessageId = conversation?.messages || [];
+    const updateMessages = await MessageModel.updateMany(
+      { _id: { $in: conversationMessageId }, msgByUserId: msgByUserId },
+      { $set: { seen: true } },
+    );
+
+    //send conversation
+    const conversationSender = await getConversation(user?._id?.toString());
+    const conversationReceiver = await getConversation(msgByUserId);
+    io.to(user?._id?.toString()).emit('conversation', conversationSender);
+    io.to(msgByUserId).emit('conversation', conversationReceiver);
   });
 
   //disconnect

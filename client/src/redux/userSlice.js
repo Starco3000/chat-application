@@ -7,7 +7,8 @@ const initialState = {
   profile_pic: '',
   token: '',
   onlineUser: [],
-  socketConnection : null
+  // CHỗ này bị bug không thể edit user details, chưa có cách khắc phục
+  socketConnection: null,
 };
 
 export const userSlice = createSlice({
@@ -32,11 +33,13 @@ export const userSlice = createSlice({
       state.email = '';
       state.profile_pic = '';
       state.token = '';
+      // CHỗ này bị bug không thể edit user details, chưa có cách khắc phục
       state.socketConnection = null;
     },
     setOnlineUser: (state, action) => {
       state.onlineUser = action.payload;
     },
+    // CHỗ này bị bug không thể edit user details, chưa có cách khắc phục
     setSocketConnection: (state, action) => {
       state.socketConnection = action.payload;
     },

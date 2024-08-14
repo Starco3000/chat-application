@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect} from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -18,7 +18,7 @@ const Home = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // console.log('user', user);
+  console.log('user', user);
 
   const fetchUserDetails = async () => {
     try {
@@ -61,6 +61,7 @@ const Home = () => {
       dispatch(setOnlineUser(data));
     });
 
+    // CHỗ này bị bug không thể edit user details, chưa có cách khắc phục 
     dispatch(setSocketConnection(socketConnection));
 
     return () => {

@@ -103,7 +103,7 @@ const MessagePage = () => {
   useEffect(() => {
     if (socketConnection) {
       socketConnection.emit('message-page', params.userId);
-      // socketConnection.emit('seen', params.userId);
+      socketConnection.emit('seen', params.userId);
       socketConnection.on('message-user', (data) => {
         setDataUser(data);
       });
@@ -233,7 +233,7 @@ const MessagePage = () => {
 
         {/* Upload image display */}
         {message.imageUrl && (
-          <div className='w-full h-[91%] fixed top-0 bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden'>
+          <div className='w-full h-full sticky bottom-0 bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden'>
             <div
               className='w-fit p-2 absolute top-0 right-0 cursor-pointer hover:text-red-600'
               onClick={handleClearUploadImage}
@@ -244,14 +244,14 @@ const MessagePage = () => {
               <img
                 src={message.imageUrl}
                 alt='uploadImage'
-                className='aspect-square w-full max-w-sm m-2 object-scale-down'
+                className='aspect-square w-full max-w-sm object-scale-down'
               />
             </div>
           </div>
         )}
         {/* Upload video display */}
         {message.videoUrl && (
-          <div className='w-full h-[91%] fixed top-0 bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden'>
+          <div className='w-full h-full sticky bottom-0 bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden'>
             <div
               className='w-fit p-2 absolute top-0 right-0 cursor-pointer hover:text-red-600'
               onClick={handleClearUploadVideo}
